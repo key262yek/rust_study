@@ -64,8 +64,7 @@ macro_rules! unwrap_with_msg_option{
 macro_rules! parse_line_err {
     ($($t: ty),+, $err_msg : literal) => ({
         #[allow(unused_parens)]
-        #[allow(unused_mut)]
-        let mut res : ($($t), +);
+        let res : ($($t), +);
 
         'outer: loop{
             let mut line = String::new();
@@ -74,7 +73,9 @@ macro_rules! parse_line_err {
             let mut iter = line.split_whitespace();
             res = (
                 $(
-                unwrap_with_msg_result!(unwrap_with_msg_option!(iter.next(), $err_msg, 'outer).parse::<$t>(), $err_msg, 'outer)
+                unwrap_with_msg_result!(
+                    unwrap_with_msg_option!(iter.next(), $err_msg, 'outer).parse::<$t>(), $err_msg, 'outer
+                    )
                 ),+
             );
 
@@ -88,8 +89,7 @@ macro_rules! parse_line_err {
 #[macro_export]
 macro_rules! parse_list_err {
   ($t: ty, $err_msg : literal) => ({
-    #[allow(unused_mut)]
-    let mut list : Vec<$t>;
+    let list : Vec<$t>;
 
     'outer: loop{
         let mut line = String::new();
